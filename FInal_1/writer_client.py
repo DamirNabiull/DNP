@@ -16,7 +16,8 @@ if __name__ == '__main__':
         while True:
             line = input("> ")
             if len(line) != 0:
-                client_inputs_sock.send_string(line)
+                to_send = name + ': ' + line
+                client_inputs_sock.send_string(to_send)
                 confirmation = client_inputs_sock.recv_string()
     except KeyboardInterrupt:
         print("Terminating client")
