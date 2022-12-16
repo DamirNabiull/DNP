@@ -19,6 +19,8 @@ if __name__ == '__main__':
                 to_send = name + ': ' + line
                 client_inputs_sock.send_string(to_send)
                 confirmation = client_inputs_sock.recv_string()
+            else:
+                print('PLEASE WrITE NON EMPTY STRING')
     except KeyboardInterrupt:
         print("Terminating client")
         client_inputs_sock.close()

@@ -3,6 +3,7 @@ import sys
 import time
 
 host = '127.0.0.1'
+INTERVAL_DURATION = 5
 
 if __name__ == '__main__':
     ci_port, co_port = sys.argv[1:]
@@ -39,7 +40,7 @@ if __name__ == '__main__':
                 print(e)
 
             # Send after 5 seconds
-            if time.time() - timer >= 5:
+            if time.time() - timer >= INTERVAL_DURATION:
                 message = 'SUMMARY'
                 keys = list(summary.keys())
                 keys.sort()
