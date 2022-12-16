@@ -17,15 +17,22 @@ if __name__ == '__main__':
 
     client_inputs_sock.RCVTIMEO = 10
 
-    summary = []
+    summary = {}
     timer = time.time()
 
     try:
         while True:
             try:
                 message = client_inputs_sock.recv_string()
-                summary.append(message)
+
+                name, msg = message.split(': ')
+                if name in summary:
+                    summary[name] += 1
+                else:
+                    summary[name] = 1
+
                 client_inputs_sock.send_string('ok')
+                client_outputs_sock.send_string(message)
             except zmq.Again:
                 pass
             except Exception as e:
@@ -34,11 +41,13 @@ if __name__ == '__main__':
             # Send after 5 seconds
             if time.time() - timer >= 5:
                 message = 'SUMMARY'
-                for msg in summary:
-                    message += f'\n  {msg}'
+                keys = list(summary.keys())
+                keys.sort()
+                for name in keys:
+                    message += f'\n  {name}: {summary[name]}'
+                    summary[name] = 0
 
                 client_outputs_sock.send_string(message)
-                summary = []
                 timer = time.time()
 
     except KeyboardInterrupt:
