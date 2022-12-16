@@ -1,5 +1,6 @@
 import zmq
 import sys
+import time
 
 host = '127.0.0.1'
 
@@ -16,18 +17,30 @@ if __name__ == '__main__':
 
     client_inputs_sock.RCVTIMEO = 10
 
+    summary = []
+    timer = time.time()
+
     try:
         while True:
             try:
                 message = client_inputs_sock.recv_string()
+                summary.append(message)
                 client_inputs_sock.send_string('ok')
-                print(message)
             except zmq.Again:
                 pass
             except Exception as e:
                 print(e)
 
-    #     SEND AFTER 5 seconds
+            # Send after 5 seconds
+            if time.time() - timer >= 5:
+                message = 'SUMMARY'
+                for msg in summary:
+                    message += f'\n  {msg}'
+
+                client_outputs_sock.send_string(message)
+                summary = []
+                timer = time.time()
+
     except KeyboardInterrupt:
         print("Terminating server")
         client_inputs_sock.close()
