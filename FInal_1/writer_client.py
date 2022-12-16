@@ -4,7 +4,7 @@ import sys
 host = '127.0.0.1'
 
 if __name__ == '__main__':
-    ci_port, co_port = sys.argv[1:]
+    ci_port, name = sys.argv[1:]
 
     context = zmq.Context()
 
